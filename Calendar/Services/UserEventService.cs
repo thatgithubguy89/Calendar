@@ -31,6 +31,14 @@ namespace Calendar.Services
             await _userEventsCollection.InsertOneAsync(userEvent);
         }
 
+        // Deletes all user events before the current day
+        public async Task DeleteAllPreviousUserEventsAsync()
+        {
+            var filter = Builders<UserEvent>.Filter.Lt(e => e.StartTime, DateTime.Now);
+
+            await _userEventsCollection.DeleteManyAsync(filter);
+        }
+
         public async Task DeleteUserEventAsync(string id)
         {
             if (string.IsNullOrWhiteSpace(id))

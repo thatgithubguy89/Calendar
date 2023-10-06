@@ -27,6 +27,12 @@ namespace Calendar.Test.Services
             new UserEvent {Title = "test", StartTime = DateTime.Now, CreatedBy = "test@gmail.com"}
         };
 
+        private static List<UserEvent> _mockPreviousUserEvents = new List<UserEvent>
+        {
+            new UserEvent {Title = "test", StartTime = DateTime.Now.AddDays(-1), CreatedBy = "test@gmail.com"},
+            new UserEvent {Title = "test", StartTime = DateTime.Now.AddDays(-2), CreatedBy = "test@gmail.com"}
+        };
+
         public UserEventServiceTests()
         {
             var configuration = new ConfigurationBuilder()
@@ -70,6 +76,17 @@ namespace Calendar.Test.Services
         public async Task AddUserEventAsync_GivenInvalidUserEvent_Throws_ArgumentNullException()
         {
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await _userEventService.AddUserEventAsync(null));
+        }
+
+        [Fact]
+        public async Task DeleteAllPreviousUserEventsAsync()
+        {
+            await _userEventsCollection.InsertManyAsync(_mockPreviousUserEvents);
+
+            await _userEventService.DeleteAllPreviousUserEventsAsync();
+            var result = await _userEventsCollection.Find(_ => true).ToListAsync();
+
+            Assert.Empty(result);
         }
 
         [Fact]
