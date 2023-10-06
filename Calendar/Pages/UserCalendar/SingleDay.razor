@@ -1,0 +1,14 @@
+﻿@page "/usercalendar/singleday/{date}"
+
+@if (userEvents.Count == 0)
+{
+    <p>Loading...</p>
+}
+else
+{
+    @foreach (var userEvent in userEvents)
+    {
+        <h3>@userEvent.Title</h3>
+        <h3>@userEvent.StartTime</h3>
+    }
+}

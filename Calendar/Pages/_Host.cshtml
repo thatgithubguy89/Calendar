@@ -13,6 +13,14 @@
     <link href="css/site.css" rel="stylesheet" />
     <link href="Calendar.styles.css" rel="stylesheet" />
     <link rel="icon" type="image/png" href="favicon.png"/>
+
+    @* Mud Blazor *@
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
+    <link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+
+    @* Heron Calendar *@
+    <link href="_content/Heron.MudCalendar/Heron.MudCalendar.min.css" rel="stylesheet" />
+
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
@@ -28,6 +36,12 @@
         <a href="" class="reload">Reload</a>
         <a class="dismiss">🗙</a>
     </div>
+
+    @* Mud Blazor *@
+    <script src="_content/MudBlazor/MudBlazor.min.js"></script>
+
+    @* Heron Calendar *@
+    <script src="_content/Heron.MudCalendar/Heron.MudCalendar.js"></script>
 
     <script src="_framework/blazor.server.js"></script>
 </body>

@@ -1,4 +1,8 @@
 using Auth0.AspNetCore.Authentication;
+using Calendar.Data;
+using Calendar.Interfaces;
+using Calendar.Services;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAuth0WebAppAuthentication(options =>
@@ -9,6 +13,10 @@ builder.Services.AddAuth0WebAppAuthentication(options =>
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddHttpContextAccessor();
+builder.Services.Configure<CalendarDatabaseSettings>(
+    builder.Configuration.GetSection("CalendarDatabase"));
+builder.Services.AddTransient<IUserEventService, UserEventService>();
+builder.Services.AddMudServices();
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
