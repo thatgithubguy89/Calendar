@@ -19,6 +19,27 @@ namespace Calendar.Services
             _userEventsCollection = mongoDatabase.GetCollection<UserEvent>(calendarDatabaseSettings.Value.UserEventsCollectionName);
         }
 
+        public async Task AddUserEventAsync(UserEvent userEvent)
+        {
+            if (userEvent == null)
+                throw new ArgumentNullException(nameof(userEvent));
+
+            userEvent.EndTime = userEvent.StartTime.Value.AddHours(1);
+            userEvent.CreateTime = DateTime.Now;
+            userEvent.LastEditTime = DateTime.Now;
+
+            await _userEventsCollection.InsertOneAsync(userEvent);
+        }
+
+        public async Task DeleteUserEventAsync(string id)
+        {
+            if (string.IsNullOrWhiteSpace(id))
+                throw new ArgumentNullException(nameof(id));
+
+            await _userEventsCollection.DeleteOneAsync(e => e.Id == id);
+        }
+
+        // Get user events for a specific user for one day.
         public async Task<List<UserEvent>> GetUserEventsByUsernameAndDateAsync(string username, DateTime date)
         {
             if (string.IsNullOrWhiteSpace(username))

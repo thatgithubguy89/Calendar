@@ -5,7 +5,7 @@ VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calendar", "Calendar\Calendar.csproj", "{12400F53-4990-4C82-9B79-231CABC3D0B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calendar.Test", "Calendar.Test\Calendar.Test.csproj", "{74D3D186-FCE3-425F-AC98-5D0B0E55FA53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Calendar.Test", "Calendar.Test\Calendar.Test.csproj", "{74D3D186-FCE3-425F-AC98-5D0B0E55FA53}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

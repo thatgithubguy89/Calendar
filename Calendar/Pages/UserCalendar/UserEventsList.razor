@@ -1,0 +1,38 @@
+﻿<div class="mb-5">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Description</th>
+                <th scope="col">Start Time</th>
+                <th scope="col">End Time</th>
+                <th scope="col">Delete</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var userEvent in UserEvents)
+            {
+                <tr>
+                    <td>@userEvent.Title</td>
+                    <td>@userEvent.StartTime</td>
+                    <td>@userEvent.EndTime</td>
+                    <td><i class="bi bi-trash-fill" style="cursor: pointer" @onclick="() => DeleteEvent(userEvent.Id)"></i></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@code {
+    [Parameter]
+    public List<UserEvent> UserEvents { get; set; }
+
+    [Parameter]
+    public EventCallback<string> OnDeleteEvent { get; set; }
+
+    // This is used to call the DeleteEvent method on the parent component SingleDay.
+    private async Task DeleteEvent(string id)
+    {
+        await OnDeleteEvent.InvokeAsync(id);
+    }
+}

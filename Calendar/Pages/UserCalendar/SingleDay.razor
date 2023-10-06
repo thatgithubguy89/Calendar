@@ -6,9 +6,28 @@
 }
 else
 {
-    @foreach (var userEvent in userEvents)
-    {
-        <h3>@userEvent.Title</h3>
-        <h3>@userEvent.StartTime</h3>
-    }
+    <UserEventsList UserEvents="userEvents" OnDeleteEvent="DeleteEvent" />
+
+    <div class="mt-5">
+        <select class="form-control w-25" @bind="@newEventTime" required>
+            <option value="12:00:00 AM" selected>12:00:00 AM</option>
+            @for (int i = 1; i < 12; i++)
+            {
+                <option value="@i:00:00 AM">@i:00:00 AM</option>
+            }
+            <option value="12:00:00 PM">12:00:00 PM</option>
+            @for (int i = 1; i < 12; i++)
+            {
+                <option value="@i:00:00 PM">@i:00:00 PM</option>
+            }
+        </select>
+
+        <div class="d-flex mt-2">
+            <input type="text" class="form-control w-50" @bind="@title" placeholder="Title of event" required />
+            <button type="submit" class="btn btn-primary ms-3" @onclick="CreateEvent">Create Event</button>
+        </div>
+        <div class="mt-3 float-start">
+            @message
+        </div>
+    </div>
 }

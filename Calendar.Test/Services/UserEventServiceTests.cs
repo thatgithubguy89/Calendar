@@ -14,6 +14,13 @@ namespace Calendar.Test.Services
         IUserEventService _userEventService;
         private readonly IMongoCollection<UserEvent> _userEventsCollection;
 
+        private static UserEvent _mockUserEvent = new UserEvent
+        {
+            Title = "test",
+            StartTime = new DateTime(2023, 01, 01, 1, 0, 0, DateTimeKind.Utc),
+            CreatedBy = "test@gmail.com"
+        };
+
         private static List<UserEvent> _mockUserEvents = new List<UserEvent>
         {
             new UserEvent {Title = "test", StartTime = DateTime.Now, CreatedBy = "test@gmail.com"},
@@ -44,6 +51,47 @@ namespace Calendar.Test.Services
         {
             var filter = Builders<UserEvent>.Filter.Empty;
             _userEventsCollection.DeleteMany(filter);
+        }
+
+        [Fact]
+        public async Task AddUserEventAsync()
+        {
+            await _userEventService.AddUserEventAsync(_mockUserEvent);
+            var userEvents = await _userEventsCollection.Find(_ => true).ToListAsync();
+            var result = userEvents.First();
+
+            Assert.IsType<UserEvent>(result);
+            Assert.Equal(_mockUserEvent.CreatedBy, result.CreatedBy);
+            Assert.Equal(_mockUserEvent.StartTime, result.StartTime);
+            Assert.Equal(_mockUserEvent.StartTime.Value.AddHours(1), result.EndTime);
+        }
+
+        [Fact]
+        public async Task AddUserEventAsync_GivenInvalidUserEvent_Throws_ArgumentNullException()
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _userEventService.AddUserEventAsync(null));
+        }
+
+        [Fact]
+        public async Task DeleteUserEventAsync()
+        {
+            await _userEventService.AddUserEventAsync(_mockUserEvent);
+
+            var userEvents = await _userEventsCollection.Find(_ => true).ToListAsync();
+            var @event = userEvents.First();
+            await _userEventService.DeleteUserEventAsync(@event.Id);
+            var result = await _userEventsCollection.Find(x => x.Id == @event.Id).FirstOrDefaultAsync();
+
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task DeleteUserEventAsync_GivenInvalidId_Throws_ArgumentNullException(string id)
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await _userEventService.DeleteUserEventAsync(id));
         }
 
         [Fact]
