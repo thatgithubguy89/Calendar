@@ -1,8 +1,15 @@
 ﻿<AuthorizeView>
     <Authorized>
-        <a href="Auth0/logout">Log out</a>
+        <li class="nav-item">
+            <a class="nav-link" href="/usercalendar">My Calendar</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="Auth0/logout">Log out</a>
+        </li>
     </Authorized>
     <NotAuthorized>
-        <a href="Auth0/login?redirectUri=/">Log in</a>
+        <li class="nav-item">
+            <a class="nav-link" href="Auth0/login?redirectUri=/">Log in</a>
+        </li>
     </NotAuthorized>
 </AuthorizeView>
