@@ -9,23 +9,20 @@ namespace Calendar.Services
     public class UserEventService : IUserEventService
     {
         private readonly IMongoCollection<UserEvent> _userEventsCollection;
-        private readonly IHttpContextAccessor _http;
 
-        public UserEventService(IOptions<CalendarDatabaseSettings> calendarDatabaseSettings, IHttpContextAccessor http)
+        public UserEventService(IOptions<CalendarDatabaseSettings> calendarDatabaseSettings)
         {
             var mongoClient = new MongoClient(calendarDatabaseSettings.Value.ConnectionString);
 
             var mongoDatabase = mongoClient.GetDatabase(calendarDatabaseSettings.Value.DatabaseName);
 
             _userEventsCollection = mongoDatabase.GetCollection<UserEvent>(calendarDatabaseSettings.Value.UserEventsCollectionName);
-
-            _http = http;
         }
 
-        public async Task<List<UserEvent>> GetUserEventsByUsernameAndDateAsync(DateTime date)
+        public async Task<List<UserEvent>> GetUserEventsByUsernameAndDateAsync(string username, DateTime date)
         {
-            //var username = _http.HttpContext.User.Claims.ToList()[1].Value;
-            var username = "test@gmail.com";
+            if (string.IsNullOrWhiteSpace(username))
+                throw new ArgumentNullException(nameof(username));
 
             var events = await _userEventsCollection.Find(e => e.CreatedBy == username).ToListAsync();
 

@@ -4,6 +4,6 @@ namespace Calendar.Interfaces
 {
     public interface IUserEventService
     {
-        Task<List<UserEvent>> GetUserEventsByUsernameAndDateAsync(DateTime date);
+        Task<List<UserEvent>> GetUserEventsByUsernameAndDateAsync(string username, DateTime date);
     }
 }

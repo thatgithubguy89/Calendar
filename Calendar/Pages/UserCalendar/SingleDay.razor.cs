@@ -18,7 +18,7 @@ namespace Calendar.Pages.UserCalendar
         {
             DateTime.TryParse(Date, out DateTime newDate);
 
-            userEvents = await UserEventService.GetUserEventsByUsernameAndDateAsync(newDate);
+            userEvents = await UserEventService.GetUserEventsByUsernameAndDateAsync("test@gmail.com", newDate);
         }
     }
 }
