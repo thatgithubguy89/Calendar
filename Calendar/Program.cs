@@ -16,6 +16,8 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.Configure<CalendarDatabaseSettings>(
     builder.Configuration.GetSection("CalendarDatabase"));
 builder.Services.AddTransient<IUserEventService, UserEventService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IUserEventEmailService, UserEventEmailService>();
 builder.Services.AddMudServices();
 
 var app = builder.Build();

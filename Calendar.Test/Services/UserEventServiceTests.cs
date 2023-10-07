@@ -12,6 +12,10 @@ namespace Calendar.Test.Services
     public class UserEventServiceTests : IDisposable
     {
         IUserEventService _userEventService;
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .AddUserSecrets("eb9a0411-27fc-4418-a1f1-9dca6800b66a")
+            .Build();
+
         private readonly IMongoCollection<UserEvent> _userEventsCollection;
 
         private static UserEvent _mockUserEvent = new UserEvent
@@ -33,12 +37,15 @@ namespace Calendar.Test.Services
             new UserEvent {Title = "test", StartTime = DateTime.Now.AddDays(-2), CreatedBy = "test@gmail.com"}
         };
 
+        private static List<UserEvent> _mockUpcomingUserEvents = new List<UserEvent>
+        {
+            new UserEvent {Title = "test", StartTime = DateTime.Now.AddHours(1), CreatedBy = "test@gmail.com"},
+            new UserEvent {Title = "test", StartTime = DateTime.Now.AddHours(1), CreatedBy = "test@gmail.com"},
+            new UserEvent {Title = "test2", StartTime = DateTime.Now.AddHours(2), CreatedBy = "test@gmail.com"}
+        };
+
         public UserEventServiceTests()
         {
-            var configuration = new ConfigurationBuilder()
-            .AddUserSecrets("eb9a0411-27fc-4418-a1f1-9dca6800b66a")
-            .Build();
-
             var mySettings = Options.Create(new CalendarDatabaseSettings
             {
                 ConnectionString = configuration["TestCalendarDatabase:ConnectionString"],
@@ -109,6 +116,17 @@ namespace Calendar.Test.Services
         public async Task DeleteUserEventAsync_GivenInvalidId_Throws_ArgumentNullException(string id)
         {
             await Assert.ThrowsAsync<ArgumentNullException>(async () => await _userEventService.DeleteUserEventAsync(id));
+        }
+
+        [Fact]
+        public async Task GetAllUpcomingUserEvents()
+        {
+            await _userEventsCollection.InsertManyAsync(_mockUpcomingUserEvents);
+
+            var result = await _userEventService.GetAllUpcomingUserEventsAsync();
+
+            Assert.IsType<List<UserEvent>>(result);
+            Assert.Equal(2, result.Count);
         }
 
         [Fact]

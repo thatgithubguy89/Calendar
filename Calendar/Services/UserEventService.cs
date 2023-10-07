@@ -47,6 +47,20 @@ namespace Calendar.Services
             await _userEventsCollection.DeleteOneAsync(e => e.Id == id);
         }
 
+        // Gets all user events set to start an hour from the current time
+        public async Task<List<UserEvent>> GetAllUpcomingUserEventsAsync()
+        {
+            var userEvents = await _userEventsCollection.Find(_ => true).ToListAsync();
+
+            if (!userEvents.Any())
+                return userEvents;
+
+            userEvents = userEvents.Where(e => e.StartTime.Value.Date == DateTime.Now.Date).ToList();
+            userEvents = userEvents.Where(e => e.StartTime.Value.Hour == DateTime.Now.ToUniversalTime().AddHours(1).Hour).ToList();
+
+            return userEvents;
+        }
+
         // Get user events for a specific user for one day.
         public async Task<List<UserEvent>> GetUserEventsByUsernameAndDateAsync(string username, DateTime date)
         {
