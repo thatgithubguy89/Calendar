@@ -7,6 +7,9 @@ namespace Calendar.Pages.UserCalendar
     public partial class SingleDay : ComponentBase
     {
         [Inject]
+        public IHttpContextAccessor Http { get; set; }
+
+        [Inject]
         public IUserEventService UserEventService { get; set; }
 
         [Inject]
@@ -19,12 +22,15 @@ namespace Calendar.Pages.UserCalendar
         private string newEventTime = string.Empty;
         private string title = string.Empty;
         private string message = string.Empty;
+        private string username = string.Empty;
 
         protected override async Task OnInitializedAsync()
         {
+            username = Http.HttpContext?.User?.Identity?.Name ?? "Unknown@gmail.com";
+
             DateTime.TryParse(Date, out DateTime newDate);
 
-            userEvents = await UserEventService.GetUserEventsByUsernameAndDateAsync("test@gmail.com", newDate);
+            userEvents = await UserEventService.GetUserEventsByUsernameAndDateAsync(username, newDate);
         }
 
         // If time slot is available, create the user event in the database and refresh page. If not, then display an error message.
@@ -33,7 +39,7 @@ namespace Calendar.Pages.UserCalendar
             var date = $"{Date} {newEventTime}";
             DateTime.TryParse(date, out DateTime newDate);
 
-            var userEvent = new UserEvent { Title = title, StartTime = newDate, CreatedBy = "test@gmail.com" };
+            var userEvent = new UserEvent { Title = title, StartTime = newDate, CreatedBy = username };
 
             if (IsTimeAvailable(newDate))
             {

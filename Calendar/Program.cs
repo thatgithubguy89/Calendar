@@ -19,6 +19,7 @@ builder.Services.AddTransient<IUserEventService, UserEventService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserEventEmailService, UserEventEmailService>();
 builder.Services.AddMudServices();
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
